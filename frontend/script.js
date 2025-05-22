@@ -1,0 +1,85 @@
+const mailList = document.getElementById("mail-list");
+const typeButtons = document.querySelectorAll(".type-btn");
+let allMails = []; // store fetched mails here
+const typeCounters = {
+  promotions: document.getElementById("promotions"),
+  primary: document.getElementById("primary"),
+  social: document.getElementById("social"),
+  updates: document.getElementById("updates"),
+};
+function formatDateTime(dateString) {
+  const date = new Date(dateString);
+  return ` ${date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  })}`;
+}
+function updateCounts(mails) {
+  const counts = { promotions: 0, primary: 0, social: 0, updates: 0 };
+  mails.forEach((mail) => {
+    const type = mail.type.toLowerCase();
+    if (counts[type] !== undefined) counts[type]++;
+  });
+
+  Object.keys(counts).forEach((type) => {
+    if (typeCounters[type]) {
+      typeCounters[type].textContent = `${
+        type.charAt(0).toUpperCase() + type.slice(1)
+      }: ${counts[type]}`;
+    }
+  });
+}
+function displayMails(selectedType = "all") {
+  mailList.innerHTML = "";
+  const filteredMails =
+    selectedType === "all"
+      ? allMails
+      : allMails.filter(
+          (mail) => mail.type.toLowerCase() === selectedType.toLowerCase()
+        );
+  filteredMails.forEach((mail) => {
+    const mailEl = document.createElement("div");
+    mailEl.classList.add("mail-item");
+    mailEl.innerHTML = `
+      <div class="header-container"><h3>${mail.sender}</h3></div>    
+      <div class="body-container">      ${
+        mail.type.toLowerCase() !== "primary"
+          ? `<span class="type ${mail.type}">${mail.type.toUpperCase()}</span>`
+          : ""
+      }     
+     <p>${mail.body.slice(0, 100)}...</p></div>
+      <div class="date-time">
+        <span>${formatDateTime(mail.createdAt)}</span>
+      </div>
+    `;
+    mailList.appendChild(mailEl);
+  });
+}
+function setupTabs() {
+  typeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      // Remove 'active' from all buttons
+      typeButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      const selectedType = btn.dataset.type;
+      // console.log(selectedType);
+      updateCounts(allMails);
+      displayMails(selectedType);
+    });
+  });
+}
+async function fetchMails() {
+  try {
+    const response = await fetch("http://localhost:8000/api/mail/getAll");
+    allMails = await response.json();
+    updateCounts(allMails);
+    displayMails("all"); // Default to showing primary mails
+
+    // displayMails(); // default tab
+    setupTabs(); // setup tab listeners
+  } catch (error) {
+    mailList.innerHTML = `<p>Error fetching mails: ${error.message}</p>`;
+  }
+}
+
+fetchMails();

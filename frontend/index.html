@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gmail</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="navbar">
+        <img
+          src="./icons/navbarIcon.png"
+          alt="options"
+          class="navbar-icon"
+          onclick="alert('Under construction')"
+        />
+        <img
+          src="./icons/mailIcon.png"
+          alt="logo"
+          class="logo"
+          onclick="alert('Under construction')"
+        />
+
+        <div class="search-bar">
+          <img
+            src="./icons/searchIcon.png"
+            alt="searchIcon"
+            class="search-icon"
+            onclick="alert('Under construction')"
+          />
+          <input type="text" placeholder="Search mail" />
+        </div>
+        <div class="misc">
+          <img
+            src="./icons/question.png"
+            alt=""
+            onclick="alert('Under construction')"
+          />
+          <img
+            src="./icons/settings.png"
+            alt=""
+            onclick="alert('Under construction')"
+          />
+          <img
+            src="./icons/Apps.png"
+            alt=""
+            onclick="alert('Under construction')"
+          />
+          <img
+            src="./icons/Avatar.png"
+            alt=""
+            style="width: 40px; height: 40px"
+            onclick="alert('Under construction')"
+          />
+        </div>
+      </div>
+      <div class="container">
+        <div class="sidebar">
+          <button class="compose">
+            <img src="./icons/cross.png" alt="" />
+            Compose
+          </button>
+          <div class="sidebar-buttons">
+            <button><img src="./icons/inboxIcon.png" alt="" />Inbox</button>
+            <button><img src="./icons/starredIcon.png" alt="" />Starred</button>
+            <button><img src="./icons/snoozedIcon.png" alt="" />Snoozed</button>
+            <button><img src="./icons/sentIcon.png" alt="" />Sent</button>
+            <button><img src="./icons/draftsIcon.png" alt="" />Drafts</button>
+            <button><img src="./icons/spamIcon.png" alt="" />Spam</button>
+            <button><img src="./icons/trashIcon.png" alt="" />Trash</button>
+            <button>
+              <img src="./icons/categoriesIcon.png" alt="" />Categories
+            </button>
+            <button><img src="./icons/moreIcon.png" alt="" />More</button>
+          </div>
+        </div>
+        <div class="mail-container">
+          <div class="mail-header">
+            <div class="type-counts">
+              <button class="type-btn" id="primary" data-type="primary">Primary:0</button>
+              <button class="type-btn" id="promotions" data-type="promotions">Promotions:0</button>
+              <button class="type-btn" id="social" data-type="social">Social:0</button>
+              <button class="type-btn" id="updates" data-type="updates">Updates:0</button>
+            </div>
+          </div>
+          <div class="mail-list" id="mail-list"></div>
+        </div>
+        
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
