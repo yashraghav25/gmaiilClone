@@ -40,7 +40,7 @@ function displayMails(selectedType = "all") {
   filteredMails.forEach((mail) => {
     const mailEl = document.createElement("div");
     mailEl.classList.add("mail-item");
-    mailEl.classList.add(mail.status === "unseen" ? "unread" : "read");
+    mailEl.classList.add(mail.status === "seen" ? "unread" : "read");
     mailEl.innerHTML = `
       <div class="header-container">
       <img 
@@ -53,7 +53,7 @@ function displayMails(selectedType = "all") {
       ${mail.sender}
       </h3>
       </div>    
-      <div class="body-container">      
+      <div class="body-container">
       ${
         mail.type.toLowerCase() !== "primary"
           ? `<span class="type ${mail.type}">${mail.type.toUpperCase()}</span>`
@@ -62,6 +62,12 @@ function displayMails(selectedType = "all") {
      ${mail.subject ? `<p style="font-weight: bold;">${mail.subject}</p>` : ""}
      <p>${mail.body.slice(0, 80)}...</p></div>
       <div class="date-time">
+      <img 
+      src="./icons/delete.png" 
+      class="delete-mail" 
+      data-id="${mail._id}" 
+      style="width: 20px; height: 20px; cursor: pointer; margin-left: 10px;" 
+    />
         <span>${formatDateTime(mail.createdAt)}</span>
       </div>
     `;
@@ -91,7 +97,7 @@ function displayMails(selectedType = "all") {
     // Handle Mark as Read
     mailEl.addEventListener("click", async (e) => {
       const mailId = e.target.dataset.id;
-      mailEl.classList.toggle("read");
+      mailEl.classList.toggle("unread");
       try {
         const res = await fetch(
           `http://localhost:8000/api/mail/read/${mailId}`,
@@ -103,13 +109,34 @@ function displayMails(selectedType = "all") {
           }
         );
         if (res.ok) {
-
           fetchMails(); // Refresh to update UI
         }
       } catch (err) {
         console.error("Error marking mail as read:", err);
       }
     });
+    //  Delete mail
+    mailEl
+      .querySelector(".delete-mail")
+      .addEventListener("click", async (e) => {
+        const mailId = e.target.dataset.id;
+        try {
+          const res = await fetch(
+            `http://localhost:8000/api/mail/delete/${mailId}`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          if (res.ok) {
+            fetchMails(); // Refresh mail list
+          }
+        } catch (err) {
+          console.error("Error deleting mail:", err);
+        }
+      });
   });
 }
 function setupTabs() {
@@ -137,5 +164,4 @@ async function fetchMails() {
     mailList.innerHTML = `<p>Error fetching mails: ${error.message}</p>`;
   }
 }
-
 fetchMails();

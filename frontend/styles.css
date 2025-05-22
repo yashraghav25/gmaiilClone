@@ -247,5 +247,8 @@ body {
     background-color: #FFFFFF;
 }
 .read {
-    font-weight: 800;
+    font-weight: 100;
   }
+.unread {
+    font-weight: 800;
+}
