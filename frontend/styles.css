@@ -185,6 +185,7 @@ body {
     font-size: 16px;
     margin: 0;
 }
+
 .mail-item:hover {
     background-color: #F1F3F4;
 }
@@ -232,6 +233,9 @@ body {
     gap: 10px;
 }
 .header-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     overflow: auto;
     width: 18%;
 }
@@ -242,3 +246,6 @@ body {
     border: 0;
     background-color: #FFFFFF;
 }
+.read {
+    font-weight: 800;
+  }

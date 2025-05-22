@@ -40,17 +40,18 @@ function displayMails(selectedType = "all") {
   filteredMails.forEach((mail) => {
     const mailEl = document.createElement("div");
     mailEl.classList.add("mail-item");
+    mailEl.classList.add(mail.status === "unseen" ? "unread" : "read");
     mailEl.innerHTML = `
       <div class="header-container">
-      <h3>
-      ${mail.sender}
-      </h3>
       <img 
       src="./icons/${mail.starred ? "starredMail.png" : "unstarredMail.png"}" 
       class="star-toggle" 
       data-id="${mail._id}" 
       style="width: 20px; height: 20px; cursor: pointer;" 
-    />
+    />      
+      <h3>
+      ${mail.sender}
+      </h3>
       </div>    
       <div class="body-container">      
       ${
@@ -58,7 +59,8 @@ function displayMails(selectedType = "all") {
           ? `<span class="type ${mail.type}">${mail.type.toUpperCase()}</span>`
           : ""
       }     
-     <p>${mail.body.slice(0, 100)}...</p></div>
+     ${mail.subject ? `<p style="font-weight: bold;">${mail.subject}</p>` : ""}
+     <p>${mail.body.slice(0, 80)}...</p></div>
       <div class="date-time">
         <span>${formatDateTime(mail.createdAt)}</span>
       </div>
@@ -85,7 +87,29 @@ function displayMails(selectedType = "all") {
         } catch (err) {
           console.error("Error toggling star:", err);
         }
-      });    
+      });
+    // Handle Mark as Read
+    mailEl.addEventListener("click", async (e) => {
+      const mailId = e.target.dataset.id;
+      mailEl.classList.toggle("read");
+      try {
+        const res = await fetch(
+          `http://localhost:8000/api/mail/read/${mailId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (res.ok) {
+
+          fetchMails(); // Refresh to update UI
+        }
+      } catch (err) {
+        console.error("Error marking mail as read:", err);
+      }
+    });
   });
 }
 function setupTabs() {
