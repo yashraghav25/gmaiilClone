@@ -7,6 +7,7 @@ export const createMail = async (req, res) => {
       sender,
       reciever,
       type,
+      subject,
       body,
     });
     //this should be awaited
@@ -32,6 +33,12 @@ export const deleteMail = async (req, res) => {
   const { id } = req.params;
   try {
     // Find the mail by ID and delete it
+    const deletedMail = await MailSchema.findByIdAndDelete(id);
+    if (deletedMail) {
+      res.status(200).json({ message: "Mail deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Mail not found" });
+    }
   } catch (error) {
     res.status(500).json({ message: "Error deleting mail", error });
   }
@@ -41,6 +48,16 @@ export const starMail = async (req, res) => {
   const { id } = req.params;
   try {
     // Find the mail by ID and mark it as starred
+    const mail = await MailSchema.findById(
+      id
+    );
+    if (mail) {
+      mail.starred = !mail.starred;
+      await mail.save();
+      res.status(200).json(mail);
+    } else {
+      res.status(404).json({ message: "Mail not found" });
+    }
   } catch (error) {
     res.status(500).json({ message: "Error starring mail", error });
   }
@@ -51,6 +68,14 @@ export const markAsRead = async (req, res) => {
   const { id } = req.params;
   try {
     // Find the mail by ID and mark it as read
+    const mail = await MailSchema.findById(id);
+    if (mail) {
+      mail.status = "seen";
+      await mail.save();
+      res.status(200).json(mail);
+    } else {
+      res.status(404).json({ message: "Mail not found" });
+    }
   } catch (error) {
     res.status(500).json({ message: "Error marking mail as read", error });
   }

@@ -41,8 +41,19 @@ function displayMails(selectedType = "all") {
     const mailEl = document.createElement("div");
     mailEl.classList.add("mail-item");
     mailEl.innerHTML = `
-      <div class="header-container"><h3>${mail.sender}</h3></div>    
-      <div class="body-container">      ${
+      <div class="header-container">
+      <h3>
+      ${mail.sender}
+      </h3>
+      <img 
+      src="./icons/${mail.starred ? "starredMail.png" : "unstarredMail.png"}" 
+      class="star-toggle" 
+      data-id="${mail._id}" 
+      style="width: 20px; height: 20px; cursor: pointer;" 
+    />
+      </div>    
+      <div class="body-container">      
+      ${
         mail.type.toLowerCase() !== "primary"
           ? `<span class="type ${mail.type}">${mail.type.toUpperCase()}</span>`
           : ""
@@ -53,6 +64,28 @@ function displayMails(selectedType = "all") {
       </div>
     `;
     mailList.appendChild(mailEl);
+    mailEl
+      .querySelector(".star-toggle")
+      .addEventListener("click", async (e) => {
+        const mailId = e.target.dataset.id;
+        try {
+          const res = await fetch(
+            `http://localhost:8000/api/mail/star/${mailId}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          if (res.ok) {
+            // Re-fetch mails to update star status
+            fetchMails();
+          }
+        } catch (err) {
+          console.error("Error toggling star:", err);
+        }
+      });    
   });
 }
 function setupTabs() {
@@ -74,7 +107,6 @@ async function fetchMails() {
     allMails = await response.json();
     updateCounts(allMails);
     displayMails("all"); // Default to showing primary mails
-
     // displayMails(); // default tab
     setupTabs(); // setup tab listeners
   } catch (error) {

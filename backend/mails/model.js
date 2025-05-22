@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const MailSchema = new mongoose.Schema({
   sender: {
     type: String,
@@ -35,5 +34,4 @@ const MailSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
 export default mongoose.model("Mail", MailSchema);

@@ -12,6 +12,7 @@ if (!MONGO_URI) {
   console.error("Missing MONGO_URI environment variable");
   process.exit(1);
 }
+app.use(express.json());
 app.use(cors("*"));
 app.use(express.json());
 //not using async
