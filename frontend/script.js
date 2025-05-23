@@ -40,7 +40,7 @@ function displayMails(selectedType = "all") {
   filteredMails.forEach((mail) => {
     const mailEl = document.createElement("div");
     mailEl.classList.add("mail-item");
-    mailEl.classList.add(mail.status === "seen" ? "unread" : "read");
+    mailEl.classList.add(mail.status === "seen" ? "read" : "unread");
     mailEl.innerHTML = `
       <div class="header-container">
       <img 
@@ -53,14 +53,19 @@ function displayMails(selectedType = "all") {
       ${mail.sender}
       </h3>
       </div>    
-      <div class="body-container">
+      <div class="body-container" data-id="${mail._id}">
       ${
         mail.type.toLowerCase() !== "primary"
-          ? `<span class="type ${mail.type}">${mail.type.toUpperCase()}</span>`
+          ? `
+          <span class="type ${mail.type}" data-id="${mail._id}">
+          ${mail.type.toUpperCase()}
+          </span>
+          `
           : ""
       }     
-     ${mail.subject ? `<p style="font-weight: bold;">${mail.subject}</p>` : ""}
-     <p>${mail.body.slice(0, 80)}...</p></div>
+     ${mail.subject ? `<p data-id="${mail._id}">${mail.subject}</p>` : ""}
+     <p data-id="${mail._id}">${mail.body.slice(0, 80)}...</p>
+     </div>
       <div class="date-time">
       <img 
       src="./icons/delete.png" 
@@ -95,9 +100,9 @@ function displayMails(selectedType = "all") {
         }
       });
     // Handle Mark as Read
-    mailEl.addEventListener("click", async (e) => {
+    mailEl.querySelector(".body-container").addEventListener("click", async (e) => {
       const mailId = e.target.dataset.id;
-      mailEl.classList.toggle("unread");
+      // mailEl.classList.toggle("unread");
       try {
         const res = await fetch(
           `http://localhost:8000/api/mail/read/${mailId}`,

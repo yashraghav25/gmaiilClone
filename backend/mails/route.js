@@ -12,6 +12,6 @@ router.delete("/delete/:id", deleteMail);
 // Route to mark a mail as starred
 //get shouldnt be used for changing things
 router.patch("/star/:id", starMail);
-// router.patch("/star/:id", starMail);
+// added mark as read route
 router.patch("/read/:id", markAsRead);
 export default router;

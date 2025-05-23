@@ -1,11 +1,14 @@
 import MailSchema from "./model.js";
 export const createMail = async (req, res) => {
+  //added subject 
+  // const { sender, reciever, type, body } = req.body;
   const { sender, reciever, subject, type, body } = req.body;
   try {
     const mail = new MailSchema({
       sender,
       reciever,
       type,
+      //added subject 
       subject,
       body,
     });

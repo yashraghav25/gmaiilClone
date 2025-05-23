@@ -150,9 +150,9 @@ body {
     cursor: pointer;
     border-radius: 6px;
   }
-.type-buttons .active {
-    background-color: #d0e0ff;
-    font-weight: bold;
+.active {
+    background-color: #C84031;
+    /* font-weight: bold; */
   }
 .mail-item {
     position: relative;
